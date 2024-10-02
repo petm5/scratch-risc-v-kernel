@@ -2,7 +2,7 @@
 rustPlatform.buildRustPackage {
   name = "kernel";
   src = ./.;
-  cargoHash = "sha256-PuQAIIER5JkoQhuHhWnxPtnhfn/NjIvCB2ni/fuCEqQ=";
+  cargoHash = "sha256-0F5Q29k8b8UcP9Y+uLLsEY/OQhg8Qg5kz0k2R7XWHsg=";
   RUSTC_BOOTSTRAP = 1;
   meta = {
     platforms = [ "riscv32-none" ];

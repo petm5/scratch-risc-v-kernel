@@ -21,7 +21,7 @@
     package = riscvPkgs.callPackage ./package.nix {};
     usage = pkgs.writeScript "run_kernel" ''
       #!/usr/bin/env bash
-      ${pkgs.qemu}/bin/qemu-system-riscv32 -bios ${package}/bin/kernel -machine virt -nographic
+      ${pkgs.qemu}/bin/qemu-system-riscv32 -bios none -device loader,addr=0x80000000,file=${package}/bin/kernel -machine virt -m 262144b -serial stdio
     '';
   in {
     devShell.x86_64-linux = pkgs.mkShell {

@@ -11,7 +11,7 @@ pub mod canvas {
         }
     }
 
-    pub fn begin_line(color: u8) {
+    pub fn set_color(color: u8) {
         const PEN_COL: *mut u8 = 0x10002002 as *mut u8;
         unsafe {
             ptr::write_volatile(PEN_COL, color);
@@ -36,6 +36,18 @@ pub mod canvas {
         const PEN_CLEAR: *mut u8 = 0x10002004 as *mut u8;
         unsafe {
             ptr::write_volatile(PEN_CLEAR, 1);
+        }
+    }
+
+    pub fn tri(coords: [(u8, u8); 3]) {
+        const TRI_DRAW: *mut u8 = 0x10003000 as *mut u8;
+        unsafe {
+            TRI_DRAW.write_volatile(coords[0].0);
+            TRI_DRAW.add(1).write_volatile(coords[0].1);
+            TRI_DRAW.add(2).write_volatile(coords[1].0);
+            TRI_DRAW.add(3).write_volatile(coords[1].1);
+            TRI_DRAW.add(4).write_volatile(coords[2].0);
+            TRI_DRAW.add(5).write_volatile(coords[2].1);
         }
     }
 

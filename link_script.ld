@@ -1,5 +1,7 @@
 MEMORY {
-  program (rwx) : ORIGIN = 0x80000000, LENGTH = 100000
+  program (rwx) : ORIGIN = 0x80000000, LENGTH = 0x10000
+  data (rw) : ORIGIN = 0x80010000, LENGTH = 0x30000
+  video (w) : ORIGIN = 0x80040000, LENGTH = 0x4000
 }
 
 SECTIONS {
@@ -12,17 +14,17 @@ SECTIONS {
 
   .rodata : {
     *(.rodata .rodata.*)
-  } > program :text
+  } > data :data
 
   .data : {
     *(.sdata .sdata.*) *(.data .data.*)
-  } > program :data
+  } > data :data
 
   .bss : {
     PROVIDE(_bss_start = .);
     *(.sbss .sbss.*) *(.bss .bss.*)
     PROVIDE(_bss_end = .);
-  } > program :bss
+  } > data :bss
 
   . = ALIGN(16);
   PROVIDE(_init_stack_top = . + 0x1000);
