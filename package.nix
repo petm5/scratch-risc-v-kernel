@@ -1,14 +1,42 @@
-{ pkgs, rustPlatform }:
-rustPlatform.buildRustPackage {
+{
+  stdenv,
+  stdenvNoCC,
+  rustPlatform,
+  rustc,
+  cargo,
+  pkgsBuildHost
+}:
+stdenvNoCC.mkDerivation (finalAttrs: {
   name = "kernel";
+
   src = ./.;
-  cargoHash = "sha256-0F5Q29k8b8UcP9Y+uLLsEY/OQhg8Qg5kz0k2R7XWHsg=";
+
+  cargoDeps = rustPlatform.fetchCargoVendor {
+    inherit (finalAttrs) name version src;
+    hash = "sha256-HRtQUS/s33D25HeJfdGI0vVM150vJu3cxuk4IySUCTE=";
+  };
+
+  nativeBuildInputs = [
+    rustc
+    rustPlatform.cargoSetupHook
+    rustPlatform.cargoBuildHook
+    rustPlatform.cargoInstallHook
+    cargo
+  ];
+
+  cargoBuildType = "release";
+
+  # Enable nightly features
   RUSTC_BOOTSTRAP = 1;
+
+  # Unsupported for our target platform
+  auditable = false;
+
+  cargoBuildFlags = [
+    "--config target.riscv32imc-unknown-none-elf.linker='${pkgsBuildHost.llvmPackages.bintools}/bin/${stdenv.cc.targetPrefix}ld.lld'"
+  ];
+
   meta = {
     platforms = [ "riscv32-none" ];
   };
-  cargoBuildFlags = [
-    "--config target.riscv32im-unknown-none-elf.linker='${pkgs.pkgsBuildHost.llvmPackages.bintools}/bin/${pkgs.stdenv.cc.targetPrefix}ld.lld'"
-  ];
-  auditable = false;
-}
+})
