@@ -7,7 +7,7 @@ edition = "2021"
 debug = "full"
 
 [profile.release]
-opt-level = 3
+opt-level = "z"
 strip = true
 lto = true
 codegen-units = 1
